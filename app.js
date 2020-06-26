@@ -1,11 +1,16 @@
 const express = require('express');
 const app = express();
-// 在本地可以查看请求连接的信息
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const productRoutes = require('./api/routes/products');
 const ordersRouter = require('./api/routes/orders')
+
+mongoose.connect('mongodb://localhost:27017/restful', {
+  useUnifiedTopology: true,
+  useNewUrlParser: true
+})
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
