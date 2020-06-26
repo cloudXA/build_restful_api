@@ -1,0 +1,24 @@
+{
+  "name": "node_restful_api",
+  "version": "1.0.0",
+  "description": "build a restful api with node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudXA/build_restful_api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cloudXA/build_restful_api/issues"
+  },
+  "homepage": "https://github.com/cloudXA/build_restful_api#readme",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.9.20"
+  }
+}
