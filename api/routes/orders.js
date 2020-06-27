@@ -10,6 +10,8 @@ const Product = require('../models/product');
 router.get('/', (req, res, next) => {
   Order.find()
     .select("product quantity _id")
+    // 第一个参数：将关联数据库表详细展示出来，第二个参数：为详细表中的展示的字段
+    .populate('product', 'name price')
     .exec()
     .then(docs => {
       res.status(200).json({
@@ -75,6 +77,7 @@ router.post('/', (req, res, next) => {
 
 router.get('/:orderId', (req, res, next) => {
   Order.findById(req.params.orderId)
+    .populate('product', 'name')
     .exec()
     .then(order => {
       if(!order) {
