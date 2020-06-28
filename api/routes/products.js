@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const multer = require('multer');
+// 告诉multer将上传文件保存在uploads
+const upload = multer({dest: 'uploads/'});
 
 const Product = require('../models/product');
 
@@ -33,8 +36,10 @@ router.get('/', (req, res, next) => {
     })
 })
 
-router.post('/', (req, res, next) => {
+// 接受一个以 productImage 命名的文件。这个文件的信息保存在 req.file。
+router.post('/', upload.single('productImage'), (req, res, next) => {
 
+  console.log(req.file)
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
