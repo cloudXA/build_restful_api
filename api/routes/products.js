@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
-const path = require('path')
+// const path = require('path')
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -13,14 +13,28 @@ const storage = multer.diskStorage({
   }
 }) 
 
+const fileFilter = (req, file, cb) => {
+  // reject a file 
+  if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
+    cb(null, false);
+  } else {
+    cb(null, true);
+  }
+}
 
-const uploads = multer({storage: storage});
+const uploads = multer({
+  storage: storage, 
+  limit: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter: fileFilter
+});
 
 const Product = require('../models/product');
 
 router.get('/', (req, res, next) => {
   Product.find()
-    .select('name price _id') //选择特性的字段作为doc
+    .select('name price _id productImage') //选择特性的字段作为doc
     .exec()
     .then(docs => {
       const response = {  // 字段封装并返回
@@ -29,6 +43,7 @@ router.get('/', (req, res, next) => {
           return {
             name: doc.name,
             price: doc.price,
+            productImage: doc.productImage,
             _id: doc._id,
             request: {
               type: 'GET',
@@ -50,11 +65,12 @@ router.get('/', (req, res, next) => {
 // 接受一个以 productImage 命名的文件。这个文件的信息保存在 req.file。
 router.post('/', uploads.single('productImage'), (req, res, next) => {
 
-  // console.log(req.file)
+  console.log(req.file)
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
-    price: req.body.price
+    price: req.body.price,
+    productImage: req.file.path
   });
 
   product
@@ -66,6 +82,7 @@ router.post('/', uploads.single('productImage'), (req, res, next) => {
           name: result.name,
           price: result.price,
           _id: result._id,
+          productImage: result.productImage,
           request: {
             type: 'GET',
             url: 'http://localhost:3000/products/' + result._id
@@ -84,7 +101,7 @@ router.post('/', uploads.single('productImage'), (req, res, next) => {
 router.get('/:productId', (req, res, next) => {
   const id = req.params.productId;
   Product.findById(id)
-    .select('name price _id')
+    .select('name price _id productImage')
     .exec()
     .then(doc => {
       if (doc) {

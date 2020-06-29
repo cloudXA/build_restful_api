@@ -19,6 +19,9 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+// 加上这句后
+// http://localhost:3000/uploads//2020-06-29T15-54-29.275ZproductImage.jpg 就能直接访问到了
+// 待理解
 app.use('/uploads', express.static('uploads'));
 
 app.use((req, res, next) => {
