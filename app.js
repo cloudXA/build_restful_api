@@ -4,9 +4,12 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+// 引入路由
 const productRoutes = require('./api/routes/products');
-const ordersRouter = require('./api/routes/orders')
+const ordersRouter = require('./api/routes/orders');
+const userRouters = require('./api/routes/user');
 
+// 连接mongoose
 mongoose.connect('mongodb://localhost:27017/restful', {
   useUnifiedTopology: true,
   useNewUrlParser: true
@@ -38,8 +41,9 @@ app.use((req, res, next) => {
 })
 
 // Routes which should handle requests 
-// 用于处理请求的路由
+// 把路由作为中间件
 app.use('/products', productRoutes)
 app.use('/orders', ordersRouter)
+app.use('/user', userRouters)
 
 module.exports = app;
