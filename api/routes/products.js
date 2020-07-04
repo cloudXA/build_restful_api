@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
 // const path = require('path')
+const checkAuth = require('../middleware/check-auth');
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -63,7 +64,7 @@ router.get('/', (req, res, next) => {
 })
 
 // 接受一个以 productImage 命名的文件。这个文件的信息保存在 req.file。
-router.post('/', uploads.single('productImage'), (req, res, next) => {
+router.post('/', uploads.single('productImage'), checkAuth, (req, res, next) => {
 
   console.log(req.file)
   const product = new Product({
