@@ -64,7 +64,7 @@ router.get('/', (req, res, next) => {
 })
 
 // 接受一个以 productImage 命名的文件。这个文件的信息保存在 req.file。
-router.post('/', uploads.single('productImage'), checkAuth, (req, res, next) => {
+router.post('/', checkAuth, uploads.single('productImage'), (req, res, next) => {
 
   console.log(req.file)
   const product = new Product({
@@ -123,7 +123,7 @@ router.get('/:productId', (req, res, next) => {
     })
 })
 
-router.patch('/:productId', (req, res, next) => {
+router.patch('/:productId', checkAuth, (req, res, next) => {
   const id = req.params.productId;
   const updateOps = {};
   // for...of循环不会遍历对象的key,只会循环出数组的value 可以配合Object.keys()
@@ -150,7 +150,7 @@ router.patch('/:productId', (req, res, next) => {
     })
 })
 
-router.delete('/:productId', (req, res, next) => {
+router.delete('/:productId', checkAuth, (req, res, next) => {
   const id = req.params.productId;
   Product.remove({ _id: id })
     .exec()
