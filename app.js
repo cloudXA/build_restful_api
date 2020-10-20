@@ -9,7 +9,7 @@ const productRoutes = require('./api/routes/products');
 const ordersRouter = require('./api/routes/orders');
 const userRouters = require('./api/routes/user');
 
-// 连接mongoose
+// 连接mongoose，restful为数据库名称
 mongoose.connect('mongodb://localhost:27017/restful', {
   useUnifiedTopology: true,
   useNewUrlParser: true
@@ -23,8 +23,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 // 加上这句后
-// http://localhost:3000/uploads//2020-06-29T15-54-29.275ZproductImage.jpg 就能直接访问到了
-// 待理解
+  // /uploads//2020-06-29T15-54-29.275ZproductImage.jpg 就能直接访问到了
+  // 待理解
+// 用作对静态文件的访问
 app.use('/uploads', express.static('uploads'));
 
 app.use((req, res, next) => {
@@ -46,4 +47,7 @@ app.use('/products', productRoutes)
 app.use('/orders', ordersRouter)
 app.use('/user', userRouters)
 
+
+
 module.exports = app;
+

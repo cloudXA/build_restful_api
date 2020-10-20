@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const user_signup = (req, res, next) => {
-  User.find({ email: req.body.email }) // find是个数组
+  console.log(User, 'User')
+  User.find({ email: req.body.email }) // 首先使用Model.find查看email是否已经存在
     .exec()
     .then(user => {
       console.log(user,'user')
@@ -21,7 +22,7 @@ const user_signup = (req, res, next) => {
                 error: err
               })
             } else {
-              const user = new User({
+              const user = new User({       // 创建user数据
                 _id: new mongoose.Types.ObjectId(),
                 email: req.body.email,
                 password: hash
@@ -46,7 +47,11 @@ const user_signup = (req, res, next) => {
       }
       
     })
-    .catch();
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      })
+    });
   
 }
 

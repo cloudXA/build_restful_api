@@ -20,6 +20,7 @@ const storage = multer.diskStorage({
 }) 
 
 const fileFilter = (req, file, cb) => {
+  console.log(file.mimetype, 'file mimetype ')
   // reject a file 
   if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
     cb(null, false);
@@ -38,12 +39,18 @@ const uploads = multer({
 
 
 
-router.get('/', checkAuth, ProductsController.products_get_all)
+router.get('/',  ProductsController.products_get_all)
 
 // 接受一个以 productImage 命名的文件。这个文件的信息保存在 req.file。
-router.post('/', checkAuth, uploads.single('productImage'), ProductsController.products_create_product)
+// router.post('/', checkAuth, uploads.single('productImage'), ProductsController.products_create_product)
 
-router.get('/:productId', checkAuth, ProductsController.products_get_product);
+
+// 经过处理，使用uploads.any()可以上传任意命名的图片格式了
+router.post('/', uploads.any(), ProductsController.products_create_product)
+
+
+
+router.get('/:productId', ProductsController.products_get_product);
 
 router.patch('/:productId', checkAuth, ProductsController.products_update_product);
 

@@ -36,24 +36,28 @@ const products_get_all = (req, res, next) => {
 
 const products_create_product = (req, res, next) => {
 
-  console.log(req.file)
+  console.log(req.files, 'req.files')
+
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     price: req.body.price,
-    productImage: req.file.path
+    productImage: req.files[0].path
+    
   });
 
   product
     .save()
     .then(result => {
+      let transferString = result.productImage && result.productImage.replace('/\//g','/')
+      console.log(transferString, 'transferstring')
       res.status(201).json({
         message: "created product successfully",
         createdProduct: {
           name: result.name,
           price: result.price,
           _id: result._id,
-          productImage: result.productImage,
+          productImage: `http://localhost:3000/${transferString}`,
           request: {
             type: 'GET',
             url: 'http://localhost:3000/products/' + result._id
