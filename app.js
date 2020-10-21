@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+let path = require('path')
 
 // 引入路由
 const productRoutes = require('./api/routes/products');
@@ -27,6 +28,9 @@ app.use(bodyParser.json());
   // 待理解
 // 用作对静态文件的访问
 app.use('/uploads', express.static('uploads'));
+
+
+app.use(express.static(path.join(__dirname, './dist')))
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
