@@ -19,7 +19,7 @@ const products_get_all = (req, res, next) => {
             _id: doc._id,
             request: {
               type: 'GET',
-              url: 'http://localhost:3000/products/' + doc._id
+              url: 'http://8.129.106.56/api/products' + doc._id
             }
           }
         })
@@ -57,10 +57,10 @@ const products_create_product = (req, res, next) => {
           name: result.name,
           price: result.price,
           _id: result._id,
-          productImage: `http://localhost:3000/${transferString}`,
+          productImage: `http://8.129.106.56/api/products/${transferString}`,
           request: {
             type: 'GET',
-            url: 'http://localhost:3000/products/' + result._id
+            url: 'http://8.129.106.56/api/products/' + result._id
           }
         }
       })
@@ -84,7 +84,7 @@ const products_get_product = (req, res, next) => {
           product: doc,
           request: {
             type: 'GET',
-            url: 'http://localhost:3000/products'
+            url: 'http://8.129.106.56/api/products'
           }
         })
       } else {
@@ -111,7 +111,7 @@ const products_update_product = (req, res, next) => {
         message: 'Product updated',
         request: {
           type: 'GET',
-          url: 'http://localhost:3000/products/' + id
+          url: 'http://8.129.106.56/api/products/' + id
         }
       });
 
@@ -133,7 +133,7 @@ const products_delete = (req, res, next) => {
         message: 'Product deleted',
         request: {  // request 为POST该如何
           type: 'POST',
-          url: 'http://localhost:3000/products',
+          url: 'http://8.129.106.56/api/products',
           body: { name: 'String', price: 'Number' }
         }
       });
