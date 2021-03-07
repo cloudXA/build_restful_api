@@ -9,6 +9,9 @@ let path = require('path')
 const productRoutes = require('./api/routes/products');
 const ordersRouter = require('./api/routes/orders');
 const userRouters = require('./api/routes/user');
+const categoryRouters = require('./api/routes/category');
+const exerciseRouters = require('./api/routes/exercise');
+const commentRouters = require('./api/routes/comment');
 
 // 连接mongoose，restful为数据库名称
 mongoose.connect('mongodb://localhost:27017/restful', {
@@ -37,7 +40,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Access, Authorization"
+    "Origin, X-Requested-With, Content-Type, Access, Authorization, X-Token"
   );
   if (req.method === 'OPTIONS') {
     res.header('Acess-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE,GET');
@@ -51,6 +54,9 @@ app.use((req, res, next) => {
 app.use('/products', productRoutes)
 app.use('/orders', ordersRouter)
 app.use('/user', userRouters)
+app.use('/category', categoryRouters)
+app.use('/exercise', exerciseRouters)
+app.use('/comment', commentRouters)
 
 
 

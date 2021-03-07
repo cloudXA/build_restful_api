@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const user_signup = (req, res, next) => {
-  console.log(User, 'User')
   User.find({ email: req.body.email }) // 首先使用Model.find查看email是否已经存在
     .exec()
     .then(user => {
@@ -19,7 +18,7 @@ const user_signup = (req, res, next) => {
           bcrypt.hash(req.body.password, 10, (err, hash)  => {
             if (err) {
               return res.status(500).json({
-                error: err
+                error: err.message
               })
             } else {
               const user = new User({       // 创建user数据
