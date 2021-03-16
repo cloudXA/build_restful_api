@@ -5,7 +5,13 @@ const mongoose = require('mongoose');
 const exercise_get_all = (req, res, next) => {
   Exercise.find()
     .exec()
-    .then(doc => {
+    .then( doc => {
+      console.log(doc, 'doc')
+      doc.forEach(async item => {
+        item.views ++
+        await item.save() 
+      })
+      // await doc[0].save();
       res.status(200).json({
         result: doc,
         total: doc.length
