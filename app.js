@@ -13,6 +13,7 @@ const categoryRouters = require('./api/routes/category');
 const exerciseRouters = require('./api/routes/exercise');
 const commentRouters = require('./api/routes/comment');
 const likeRouters = require('./api/routes/like');
+const filterateRouters = require('./api/routes/filterate');
 
 // 连接mongoose，restful为数据库名称
 mongoose.connect('mongodb://localhost:27017/restful', {
@@ -59,6 +60,7 @@ app.use('/api/category', categoryRouters)
 app.use('/api/exercise', exerciseRouters)
 app.use('/api/comment', commentRouters)
 app.use('/api/likes', likeRouters)
+app.use('/api/filterate', filterateRouters)
 
 
 

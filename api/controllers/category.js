@@ -56,8 +56,6 @@ const category_get_all = (req, res, next) => {
               error: error
             })
           })
-
-  
 }
 
 
