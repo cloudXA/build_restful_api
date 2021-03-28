@@ -29,8 +29,9 @@ const exercise_post_all = (req, res, next) => {
     solution: req.body.solution,                  // 答案
     shortSolution: req.body.shortSolution,      // 简答的答案
     property: req.body.property,                // 1:单选 2：多选 3: 判断 4: 简单
-    type: req.body.type                         // 1: 公司题库 2 面试题库
-
+    type: req.body.type,                         // 1: 公司题库 2 面试题库
+    company: req.body.company,           
+    // basic: req. 
   })
   exercise
       .save()

@@ -13,7 +13,8 @@ const exerciseSchema = mongoose.Schema({
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],                  // 评论数
   property: { type: Number },
   type: { type: Number },
-  isLiked: { type: Boolean, default: false }                                    // 是否喜欢
+  isLiked: { type: Boolean, default: false },                                    // 是否喜欢
+  company: { type: String }                                                      // 所属公司
 
 })
 

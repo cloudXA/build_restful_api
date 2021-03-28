@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const sonSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  son: { type: String },
-  exercise: { type: Schema.Types.ObjectId, ref: 'Exercise' }
+  name: { type: String },
+  exercises: [{ type: Schema.Types.ObjectId, ref: 'Exercise' }]
 
 })
 
