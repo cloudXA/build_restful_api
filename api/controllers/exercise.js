@@ -48,4 +48,19 @@ const exercise_post_all = (req, res, next) => {
   
 }
 
-module.exports = { exercise_get_all,  exercise_post_all};
+const exercise_update = (req, res, next) => {
+  Exercise.findByIdAndUpdate({ _id: req.body.id }, { company: req.body.company })
+          .then(doc => {
+            res.status(200).json({
+              doc
+            })
+          })
+          .catch(error => {
+            res.status(500).json({
+              error
+            })
+          }) 
+
+}
+
+module.exports = { exercise_get_all,  exercise_post_all, exercise_update };

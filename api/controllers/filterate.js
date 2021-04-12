@@ -33,6 +33,25 @@ const category_top_post = (req, res, next) => {
   
 }
 
+const category_top_add = (req, res, next) => {
+  // Grandpa
+  const grandpa = new Grandpa({
+    _id: new mongoose.Types.ObjectId(),
+    name: req.body.name
+  })
+  grandpa
+      .save()
+      .then(result => {
+        res.status(200).json({
+          result,
+          message: '添加完成'
+        })
+      })
+      .catch(error => {
+        error
+      })
+}
+
 /**
  * 
  * @param {*} req 
@@ -92,7 +111,7 @@ const category_medium_post = (req, res, next) => {
  * @param {*} next 
  */
 const category_medium_get = (req, res, next) => {
-  Grandpa.findById({ _id: req.body.id } )
+  Grandpa.findById({ _id: req.query.id || req.body.id })
           .select('containers name')
           .populate('containers')
           .exec()
@@ -107,6 +126,7 @@ const category_medium_get = (req, res, next) => {
             })
           })
 }
+
 
 /**
  * 制定basic分类
@@ -145,7 +165,7 @@ const category_basic_post = (req, res, next) => {
  * @param {*} next 
  */
 const category_basic_get = (req, res, next) => {
-  Parent.findById({ _id: req.body.id })
+  Parent.findById({ _id: req.body.id || req.query.id })
         .select('name containers')
         .populate('containers')
         .then(async data => {
@@ -188,16 +208,41 @@ const category_exercise_assign = (req, res, next) => {
 }
 
 /**
- * 获取basic分类关联的题目exercise
+ * 获取basic分类关联的公司
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
+const categoryBasic_exercise_get_company = (req, res, next) => {
+  Son.findById({ _id: req.body.id || req.query.id })
+      .select('exercises name')
+      .populate(' exercises ', 'company views')
+      // .select('company')
+      .then(data => {
+        console.log(data, 'data')
+        res.status(200).json({
+          data
+        })
+      })
+      .catch(error => {
+        res.status(500).json({
+          error
+        })
+      })
+}
+
+/**
+ * 获取basic分类关联的题目
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
  */
 const categoryBasic_exercise_get = (req, res, next) => {
-  Son.findById({ _id: req.body.id })
+  Son.findById({ _id: req.body.id || req.query.id })
       .select('exercises name')
       .populate(' exercises ')
       .then(data => {
+        console.log(data, 'data')
         res.status(200).json({
           data
         })
@@ -213,10 +258,13 @@ const categoryBasic_exercise_get = (req, res, next) => {
 module.exports = { 
   category_top_post,
   category_top_get,
+  category_top_add,
   category_medium_post,
   category_medium_get,
   category_basic_get,
   category_basic_post,
   category_exercise_assign,
-  categoryBasic_exercise_get
+  categoryBasic_exercise_get,
+  categoryBasic_exercise_get_company
+
 };
