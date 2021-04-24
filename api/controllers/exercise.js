@@ -11,7 +11,6 @@ const exercise_get_all = (req, res, next) => {
         item.views ++
         await item.save() 
       })
-      // await doc[0].save();
       res.status(200).json({
         result: doc,
         total: doc.length
@@ -31,7 +30,6 @@ const exercise_post_all = (req, res, next) => {
     property: req.body.property,                // 1:单选 2：多选 3: 判断 4: 简单
     type: req.body.type,                         // 1: 公司题库 2 面试题库
     company: req.body.company,           
-    // basic: req. 
   })
   exercise
       .save()
@@ -63,4 +61,19 @@ const exercise_update = (req, res, next) => {
 
 }
 
-module.exports = { exercise_get_all,  exercise_post_all, exercise_update };
+const exercise_get_id = (req, res, next) => {
+  Exercise.findById({ _id: req.params.id })
+          .then(doc => {
+            res.status(200).json({
+              doc,
+            })
+          })
+          .catch(error => {
+            res.status(500).json({
+              error,
+            })
+          })
+
+}
+
+module.exports = { exercise_get_all,  exercise_post_all, exercise_update, exercise_get_id };
