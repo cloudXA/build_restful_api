@@ -13,4 +13,8 @@ router.post('/login', UserController.user_login)
 
 router.delete('/:userId', UserController.user_delete) 
 
+router.get('/:userId', UserController.user)
+
+router.post('/userAddReply', UserController.user_add_reply)
+
 module.exports = router;

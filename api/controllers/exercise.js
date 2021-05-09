@@ -27,17 +27,17 @@ const exercise_post_all = (req, res, next) => {
     analysis: req.body.analysis,                  // 解析
     solution: req.body.solution,                  // 答案
     shortSolution: req.body.shortSolution,      // 简答的答案
-    property: req.body.property,                // 1:单选 2：多选 3: 判断 4: 简单
+    property: req.body.property,                // 1:单选 2：多选 3: 判断 4: 简答
     type: req.body.type,                         // 1: 公司题库 2 面试题库
     company: req.body.company,           
   })
-  exercise
+  exercise  
       .save()
       .then(result => {
         res.status(200).json({
           result: result,
           message: '创建完成'
-        })
+        })  
         
       })
       .catch(error => {

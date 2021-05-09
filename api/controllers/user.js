@@ -4,7 +4,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const ExerReply = require('../models/exerReply');
 
+// 注册
 const user_signup = (req, res, next) => {
   User.find({ email: req.body.email }) // 首先使用Model.find查看email是否已经存在
     .exec()
@@ -29,14 +31,12 @@ const user_signup = (req, res, next) => {
               user
                 .save()
                 .then(result => {
-                  console.log(result);
                   res.status(201).json({
                     message: 'User created',
                     userInfor: result
                   });
                 })
                 .catch(err => {
-                  console.log(err);
                   res.status(500).json({
                     error: err
                   })
@@ -54,7 +54,7 @@ const user_signup = (req, res, next) => {
   
 }
 
-
+// 登录
 const user_login = (req, res, next) => {
   User.find({ email: req.body.email })
     .exec()
@@ -79,7 +79,8 @@ const user_login = (req, res, next) => {
           )
           return res.status(200).json({
             message: 'Auth successful',
-            token: token
+            token: token,
+            userInfor: user
           })
         } else {
           return res.status(401).json({
@@ -97,6 +98,7 @@ const user_login = (req, res, next) => {
     })
 }
 
+// 删除用户信息
 const user_delete = (req, res, next) => {
   User.remove({ _id: req.params.userId })
     .exec()
@@ -106,7 +108,6 @@ const user_delete = (req, res, next) => {
       })
     })
     .catch(err => {
-      console.log(err);
       res.status(500).json({
         error: err
       })
@@ -114,4 +115,62 @@ const user_delete = (req, res, next) => {
 }
 
 
-module.exports = { user_signup,  user_login, user_delete }
+// 上传用户信息
+
+
+// 获取用户信息
+const user = (req, res, next) => {
+  User.findById({ _id: req.params.userId })
+    .select('_id email')
+    .exec()
+    .then(result => {
+      res.status(200).json({
+        result
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      })
+    })
+}
+
+// 用户基于题目选中的答案信息关联到exerReply表中
+const user_add_reply = (req, res, next) => {
+  User.findById({ _id: req.body.userId })
+    .then(async doc => {
+      const exerReply = new ExerReply({
+        _id: new mongoose.Types.ObjectId(),
+        exerId: req.body.exerId,
+        reply: {
+          reply: req.body.reply,
+          userId: req.body.userId,
+          exerId: req.body.exerId
+        }
+      })
+      await exerReply.save();
+      // doc.exerReply.push(exerReply.exerId);
+      // exerReply.findById({ _id: exerReply.id })
+      //       .then(doc => {
+      //         console.log(doc, 'document')
+      //       })
+      console.log(exerReply.exerId, 'exerReply')
+      // TODO: 
+      doc.exerReply.push(exerReply.exerId)
+      return doc.save();
+    })
+    .then(result => {
+      res.status(200).json({
+        result
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        err
+      })
+    })
+
+
+}
+
+module.exports = { user_signup,  user_login, user_delete, user, user_add_reply}
