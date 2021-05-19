@@ -139,6 +139,8 @@ const user = (req, res, next) => {
 const user_add_reply = (req, res, next) => {
   User.findById({ _id: req.body.userId })
     .then(async doc => {
+
+      // 建立用户做题响应模型
       const exerReply = new ExerReply({
         _id: new mongoose.Types.ObjectId(),
         exerId: req.body.exerId,
@@ -149,15 +151,29 @@ const user_add_reply = (req, res, next) => {
         }
       })
       await exerReply.save();
-      // doc.exerReply.push(exerReply.exerId);
-      // exerReply.findById({ _id: exerReply.id })
-      //       .then(doc => {
-      //         console.log(doc, 'document')
-      //       })
-      console.log(exerReply.exerId, 'exerReply')
-      // TODO: 
-      doc.exerReply.push(exerReply.exerId)
-      return doc.save();
+      
+      // 
+      if(doc.exerReply.length) {
+        let exerId = req.body.exerId;
+        let n = 0, length = doc.exerReply.length;
+        doc.exerReply.forEach(async (item,index) => {
+          ExerReply.findById({ _id: item }) //每一个响应信息详情
+                  .then(data => { // 同一个exerId的话，修改之
+                    if(data["reply"][0].exerId === exerId) {
+                      doc.exerReply.splice(index, 1, exerReply._id);
+                      return doc.save()
+                    } else { // 在doc。exerReply的最后一个item遍历时，将exerReply传入_id;
+                      if(++n === length) {
+                        doc.exerReply.push(exerReply._id);
+                        return doc.save();
+                      }
+                    }
+                  })
+        })
+      } else { //在用户关联的exerReply为空时，直接push进_id
+        doc.exerReply.push(exerReply._id)
+        return doc.save();
+      }
     })
     .then(result => {
       res.status(200).json({
@@ -173,4 +189,20 @@ const user_add_reply = (req, res, next) => {
 
 }
 
-module.exports = { user_signup,  user_login, user_delete, user, user_add_reply}
+
+const user_reply_callback = (req, res, next) => {
+  User.findById({ _id: req.body.userId })
+      .populate('reply')
+      .then(data => {
+        res.status(200).json({
+          data
+        })
+      })
+      .catch(err => {
+        res.status(500).json({
+          err
+        })
+      })
+}
+
+module.exports = { user_signup,  user_login, user_delete, user, user_add_reply, user_reply_callback}

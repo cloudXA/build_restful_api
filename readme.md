@@ -16,4 +16,6 @@
 #### 用户提交答案
 当用户登录时，拿到用户个人信息id；在某个题目下提交答案信息的同时，将用户id、题目id、选项传递到后端。
 后端中将用户模型----关联到-----exerReply模型，exerReply中的reply记录用户的id、题目id、选项信息。
+User--->exerReply(exerId),
 当用户提交试卷时或者刷新页面信息丢失时，获取exerReply信息。最后完成该题库后，将exerReply清空。
+#### 

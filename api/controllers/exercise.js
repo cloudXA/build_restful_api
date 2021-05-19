@@ -61,19 +61,27 @@ const exercise_update = (req, res, next) => {
 
 }
 
+// 基于id获取所有的题目信息，（包括答案）
 const exercise_get_id = (req, res, next) => {
-  Exercise.findById({ _id: req.params.id })
-          .then(doc => {
-            res.status(200).json({
-              doc,
-            })
-          })
-          .catch(error => {
-            res.status(500).json({
-              error,
-            })
-          })
+  let shield;
+  if(req.query && req.query.answer == 0) { // 0屏蔽下列答案  1放开所有答案
+    shield = '-analysis -solution -comments -isLiked -likes -views'
+  } else {
+    shield = "-__v";
+  }
 
+  // 屏蔽吊答案
+  Exercise.findById({ _id: req.params.id }, `${shield}`)
+    .then(doc => {
+      res.status(200).json({
+        doc,
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+        error,
+      })
+    })
 }
 
 module.exports = { exercise_get_all,  exercise_post_all, exercise_update, exercise_get_id };
