@@ -67,6 +67,7 @@ const exercise_get_id = (req, res, next) => {
   if(req.query && req.query.answer == 0) { // 0屏蔽下列答案  1放开所有答案
     shield = '-analysis -solution -comments -isLiked -likes -views'
   } else {
+  
     shield = "-__v";
   }
 

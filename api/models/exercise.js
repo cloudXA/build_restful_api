@@ -11,8 +11,8 @@ const exerciseSchema = mongoose.Schema({
   likes: { type: Number, default: 0 },                                          // 喜欢量
   views: { type: Number, default: 0 },                                          // 浏览量
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],                  // 评论数
-  property: { type: Number },
-  type: { type: Number },
+  property: { type: Number },                                                    // 1:单选 2：多选 3: 判断 4: 简答
+  type: { type: Number },                                                       // 1: 公司题库 2 面试题库
   isLiked: { type: Boolean, default: false },                                    // 是否喜欢
   company: { type: String }                                                      // 所属公司
 

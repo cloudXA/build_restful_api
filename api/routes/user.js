@@ -20,4 +20,6 @@ router.post('/userAddReply', UserController.user_add_reply)
 
 router.post('/userCallback', UserController.user_reply_callback)
 
+router.post('/userReplyRemove', UserController.user_reply_remove)
+
 module.exports = router;

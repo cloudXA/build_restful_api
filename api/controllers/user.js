@@ -152,20 +152,23 @@ const user_add_reply = (req, res, next) => {
       })
       await exerReply.save();
       
-      // 
+      // 同一个exerId唯一对应一个exerReply模型
       if(doc.exerReply.length) {
         let exerId = req.body.exerId;
         let n = 0, length = doc.exerReply.length;
         doc.exerReply.forEach(async (item,index) => {
           ExerReply.findById({ _id: item }) //每一个响应信息详情
                   .then(data => { // 同一个exerId的话，修改之
-                    if(data["reply"][0].exerId === exerId) {
+                    if(data && data["reply"][0].exerId === exerId) {
                       doc.exerReply.splice(index, 1, exerReply._id);
+                      data.remove();
                       return doc.save()
                     } else { // 在doc。exerReply的最后一个item遍历时，将exerReply传入_id;
                       if(++n === length) {
                         doc.exerReply.push(exerReply._id);
                         return doc.save();
+
+
                       }
                     }
                   })
@@ -190,9 +193,25 @@ const user_add_reply = (req, res, next) => {
 }
 
 
+/**
+ * 移除user关联的exerReply字段下的所有document
+ */
+const user_remove_reply = (req, res, next) => {
+  User.findById({ _id: req.body.userId })
+      .select('exerReply')
+      .then(data => {
+        console.log(data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+}
+
+// 数据题目答案回显
 const user_reply_callback = (req, res, next) => {
   User.findById({ _id: req.body.userId })
-      .populate('reply')
+      .populate('exerReply')
       .then(data => {
         res.status(200).json({
           data
@@ -205,4 +224,36 @@ const user_reply_callback = (req, res, next) => {
       })
 }
 
-module.exports = { user_signup,  user_login, user_delete, user, user_add_reply, user_reply_callback}
+const user_reply_remove = (req, res, next) => {
+  User.findById({ _id: req.body.userId })
+      .then(async data => {
+        // data.remove();
+        // data.remove("exerReply")
+        data.exerReply = [];
+        await data.save();
+        // console.log(result)
+
+        res.status(200).json({
+          data,
+          message: 'remove success',
+          retCode: 0
+        })
+      })
+      .catch(err => {
+        res.status(500).json({
+          message: 'remove error'
+        })
+      })
+
+
+}
+
+module.exports = { 
+  user_signup,  
+  user_login, 
+  user_delete, 
+  user, 
+  user_add_reply, 
+  user_reply_callback,
+  user_reply_remove
+}
