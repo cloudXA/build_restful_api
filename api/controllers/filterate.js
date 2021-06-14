@@ -214,9 +214,30 @@ const category_exercise_assign = (req, res, next) => {
  * @param {*} next 
  */
 const categoryBasic_exercise_get_company = (req, res, next) => {
-  Son.findById({ _id: req.body.id || req.query.id })
+  let { id } = req.query
+
+  if(id === "all") {
+
+    Son.find({})
+        .select('exercises name')
+        .populate(' exercises ', 'company views property')
+        // .select('company')
+        .then(data => {
+          console.log(data, 'data')
+          res.status(200).json({
+            data
+          })
+        })
+        .catch(error => {
+          res.status(500).json({
+            error
+          })
+        })
+  } else {
+
+    Son.findById({ _id: req.body.id || req.query.id })
       .select('exercises name')
-      .populate(' exercises ', 'company views')
+      .populate(' exercises ', 'company views property')
       // .select('company')
       .then(data => {
         console.log(data, 'data')
@@ -229,6 +250,7 @@ const categoryBasic_exercise_get_company = (req, res, next) => {
           error
         })
       })
+  }
 }
 
 /**
@@ -238,7 +260,7 @@ const categoryBasic_exercise_get_company = (req, res, next) => {
  * @param {*} next 
  */
 const categoryBasic_exercise_get = (req, res, next) => {
-  Son.findById({ _id: req.body.id || req.query.id })
+    Son.findById({ _id: req.body.id || req.query.id })
       .select('exercises name')
       .populate(' exercises ')
       .then(data => {
@@ -252,6 +274,7 @@ const categoryBasic_exercise_get = (req, res, next) => {
           error
         })
       })
+  
 }
 
 
