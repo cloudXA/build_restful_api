@@ -36,18 +36,9 @@ app.use('/uploads', express.static('uploads'));
 
 
 
-let cors = {
-  origin: [
-    "http://localhost:8080",
-    "http://sankeyou.top"
-  ]
-}
 
 app.use((req, res, next) => {
-  let origin = req.headers.origin;
-  if(cors.origin.indexOf(origin) >= 0) {
-    res.header("Access-Control-Allow-Origin", origin)
-  }
+  res.header("Access-Control-Allow-Origin", "*")
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Access, Authorization, X-Token"
@@ -59,7 +50,7 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use('/online', express.static('dist'))
+app.use('/', express.static('dist'))
 
 // Routes which should handle requests 
 // 把路由作为中间件
