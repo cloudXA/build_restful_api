@@ -49,6 +49,11 @@ router.get('/',  ProductsController.products_get_all)
 router.post('/', uploads.any(), ProductsController.products_create_product)
 
 
+// 创建产品（带有image url）
+router.post('/create_products', ProductsController.products_create_product_urlImage)
+// 获取产品（分页）
+router.post('/get_product', ProductsController.products_get_product_limit)
+
 
 router.get('/:productId', ProductsController.products_get_product);
 

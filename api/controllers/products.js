@@ -73,6 +73,53 @@ const products_create_product = (req, res, next) => {
 
 }
 
+
+const products_create_product_urlImage = (req, res, next) => {
+  console.log(req, 'req')
+  const product = new Product({
+    _id: new mongoose.Types.ObjectId(),
+    name: req.body.name,
+    description: req.body.description,
+    url: req.body.url
+  })
+
+  product
+    .save()
+    .then(result => {
+      res.status(201).json({
+        message: 'created product successful'
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      })
+    })
+}
+
+const products_get_product_limit = async (req, res, next) => {
+  const { page, pageCount } = req.body;
+  const count = await Product.find();
+  Product.find()
+    .limit(pageCount)
+    .skip(pageCount * page)
+    .then(docs => {
+      const response = {
+        count: docs.length,
+        page: page,
+        docs,
+        totalCount: count.length
+      }
+      res.status(201).json(response)
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: error
+      })
+    })
+
+}
+
 const products_get_product = (req, res, next) => {
   const id = req.params.productId;
   Product.findById(id)
@@ -148,4 +195,12 @@ const products_delete = (req, res, next) => {
 
 
 
-module.exports = { products_get_all, products_create_product,  products_get_product, products_update_product, products_delete}
+module.exports = { 
+  products_get_all, 
+  products_create_product,  
+  products_get_product, 
+  products_update_product, 
+  products_delete,
+  products_create_product_urlImage,
+  products_get_product_limit
+}
